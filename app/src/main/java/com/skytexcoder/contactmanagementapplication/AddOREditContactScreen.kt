@@ -120,6 +120,10 @@ fun AddOREditContactScreen(navigationController: NavController, ContactID: Long 
                     ContactRepository.addContact(newContact)
                     navigationController.popBackStack()
                 } else {
+                    if (contactAddress.split(" ").size < 5) {
+                        isAddressLessThanFiveWords = true
+                        return@Button
+                    }
                     val updatedContact = Contact(
                         id = contactID.toLong(),
                         name = contactName,
