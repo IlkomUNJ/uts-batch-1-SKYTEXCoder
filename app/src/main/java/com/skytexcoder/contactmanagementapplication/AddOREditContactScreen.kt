@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
@@ -34,13 +35,17 @@ fun AddOREditContactScreen(navigationController: NavController, ContactID: Long 
     var isAddressLessThanFiveWords by remember { mutableStateOf(false) }
 
     if (ContactID != -1L) {
-        val contact = ContactRepository.getContactByID(ContactID)
-        contactID = contact?.id.toString()
-        contactName = contact?.name ?: ""
-        contactAddress = contact?.address ?: ""
-        contactPhone = contact?.phone ?: ""
-        contactEmail = contact?.email ?: ""
-        isAddressLessThanFiveWords = false
+        LaunchedEffect(key1 = ContactID) {
+            val contact = ContactRepository.getContactByID(ContactID)
+            if (contact != null) {
+                contactID = contact.id.toString()
+                contactName = contact.name
+                contactEmail = contact.email
+                contactAddress = contact.address
+                contactPhone = contact.phone
+                isAddressLessThanFiveWords = false
+            }
+        }
     }
 
     Column(
