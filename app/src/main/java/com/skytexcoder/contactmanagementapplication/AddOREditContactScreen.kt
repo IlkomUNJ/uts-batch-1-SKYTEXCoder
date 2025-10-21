@@ -25,13 +25,23 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddOREditContactScreen(navigationController: NavController, ContactID: Long = -1) {
+fun AddOREditContactScreen(navigationController: NavController, ContactID: Long = -1L) {
     var contactID by remember { mutableStateOf("") }
     var contactName by remember { mutableStateOf("") }
     var contactAddress by remember { mutableStateOf("") }
     var contactPhone by remember { mutableStateOf("") }
     var contactEmail by remember { mutableStateOf("") }
     var isAddressLessThanFiveWords by remember { mutableStateOf(false) }
+
+    if (ContactID != -1L) {
+        val contact = ContactRepository.getContactByID(ContactID)
+        contactID = contact?.id.toString()
+        contactName = contact?.name ?: ""
+        contactAddress = contact?.address ?: ""
+        contactPhone = contact?.phone ?: ""
+        contactEmail = contact?.email ?: ""
+        isAddressLessThanFiveWords = false
+    }
 
     Column(
         modifier = Modifier
@@ -41,7 +51,7 @@ fun AddOREditContactScreen(navigationController: NavController, ContactID: Long 
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Add New Contact",
+            text = if (ContactID == -1L) "Add A New Contact" else "Edit The Specific Selected Contact",
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(bottom = 24.dp)
         )
@@ -90,27 +100,37 @@ fun AddOREditContactScreen(navigationController: NavController, ContactID: Long 
 
         Button(
             onClick = {
-
-                if (contactAddress.split(" ").size < 5) {
-                    isAddressLessThanFiveWords = true
-                    return@Button
+                if (ContactID == -1L) {
+                    if (contactAddress.split(" ").size < 5) {
+                        isAddressLessThanFiveWords = true
+                        return@Button
+                    }
+                    val newContact = Contact(
+                        id = ContactRepository.generateContactID(),
+                        name = contactName,
+                        phone = contactPhone,
+                        address = contactAddress,
+                        email = contactEmail,
+                    )
+                    ContactRepository.addContact(newContact)
+                    navigationController.popBackStack()
+                } else {
+                    val updatedContact = Contact(
+                        id = contactID.toLong(),
+                        name = contactName,
+                        phone = contactPhone,
+                        address = contactAddress,
+                        email = contactEmail,
+                    )
+                    ContactRepository.updateContact(updatedContact)
+                    navigationController.popBackStack()
                 }
-
-                val newContact = Contact(
-                    id = ContactRepository.generateContactID(),
-                    name = contactName,
-                    phone = contactPhone,
-                    address = contactAddress,
-                    email = contactEmail,
-                )
-                ContactRepository.addContact(newContact)
-                navigationController.popBackStack()
             },
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(vertical = 12.dp),
             enabled = contactName.isNotBlank() && contactPhone.isNotBlank() && contactAddress.isNotBlank() && contactEmail.isNotBlank(),
         ) {
-            Text("Add A New Contact", style = MaterialTheme.typography.titleMedium)
+            Text(if (ContactID == -1L) "Add A New Contact" else "Edit The Specific Selected Contact", style = MaterialTheme.typography.titleMedium)
         }
     }
 }

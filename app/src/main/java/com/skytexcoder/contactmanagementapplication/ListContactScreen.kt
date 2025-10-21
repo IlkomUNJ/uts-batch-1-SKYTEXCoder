@@ -98,7 +98,7 @@ fun ListContactScreen(navigationController: NavController) {
                     ContactListItem(
                         contactName = contact.name,
                         contactAddress = contact.address,
-                        onLongClick = { navigationController.navigate(route = "") }
+                        onLongClick = { navigationController.navigate(route = "edit_contact_screen_composable_route/${contact.id}") }
                     )
                     Divider()
                 }

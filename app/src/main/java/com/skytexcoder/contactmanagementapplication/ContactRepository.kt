@@ -18,6 +18,10 @@ object ContactRepository {
         return contactsList
     }
 
+    fun getContactByID(id: Long): Contact? {
+        return contactsList.find { it.id == id }
+    }
+
     fun addContact(contact: Contact) {
         contactsList.add(contact)
     }
