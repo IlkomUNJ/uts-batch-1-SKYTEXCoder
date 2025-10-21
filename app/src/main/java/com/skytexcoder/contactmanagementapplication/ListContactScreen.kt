@@ -1,6 +1,9 @@
 package com.skytexcoder.contactmanagementapplication
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -25,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -88,9 +93,13 @@ fun ListContactScreen(navigationController: NavController) {
                     .padding(paddingValues)
                     .padding(16.dp)
             ) {
-                items(contacts) {
+                items(items = contacts, key = {it.id}) {
                         contact ->
-                    ContactListItem(contactName = contact.name, contactAddress = contact.address)
+                    ContactListItem(
+                        contactName = contact.name,
+                        contactAddress = contact.address,
+                        onLongClick = { navigationController.navigate(route = "") }
+                    )
                     Divider()
                 }
             }
@@ -100,11 +109,21 @@ fun ListContactScreen(navigationController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContactListItem(contactName: String, contactAddress: String) {
+fun ContactListItem(
+    contactName: String,
+    contactAddress: String,
+    onLongClick: () -> Unit,
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 4.dp)
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onLongClick = onLongClick,
+                onClick = {}
+            ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors()
     ) {

@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddOREditContactScreen(navigationController: NavController) {
+fun AddOREditContactScreen(navigationController: NavController, ContactID: Long = -1) {
     var contactID by remember { mutableStateOf("") }
     var contactName by remember { mutableStateOf("") }
     var contactAddress by remember { mutableStateOf("") }
