@@ -64,7 +64,7 @@ fun AddOREditContactScreen(navigationController: NavController) {
             supportingText = {
                 if (isAddressLessThanFiveWords) {
                     Text (
-                        text = "Detected address is less than 5 words. Please specify an address with AT LEAST 5 words.",
+                        text = "Detected address string contains less than 5 words. Please specify an address string with AT LEAST 5 words.",
                         color = MaterialTheme.colorScheme.error,
                     )
                 }

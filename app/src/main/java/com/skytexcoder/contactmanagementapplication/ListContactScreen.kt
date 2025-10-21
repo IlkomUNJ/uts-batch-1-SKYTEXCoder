@@ -112,13 +112,13 @@ fun ContactListItem(contactName: String, contactAddress: String) {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = contactName,
+                text = "Contact Name: $contactName",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
             if (contactAddress.split(" ").size >= 5) {
                 Text(
-                    text = contactAddress,
+                    text = "Contact Address: $contactAddress",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
